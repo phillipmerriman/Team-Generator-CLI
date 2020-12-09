@@ -40,9 +40,10 @@ function managerQuestions () {
                 message: "Manager office number:"
             }
         ]).then((response) => {
-                employees.push(new Manager(response.name, id, response.email, response.officeNumber));
+                const newMgr = new Manager(response.name, id, response.email, response.officeNumber);
+                employees.push(newMgr);
                 id++;
-                employeeQuestions();
+                createTeam();
             })
 }
 
@@ -73,23 +74,12 @@ function employeeQuestions () {
                         type: "input",
                         name: "school",
                         message: "Interns school:"
-                    },
-                    {
-                        type: "list",
-                        name: "more",
-                        message: "Would you like to add another employee?",
-                        choices: [
-                            "yes",
-                            "no"
-                        ]
                     }
                 ]).then((response) => {
-                    employees.push(new Intern(response.name, id, response.email, response.school));
+                    const newInt = new Intern(response.name, id, response.email, response.school);
+                    employees.push(newInt);
                     console.log(employees);
-                    if (response.more === "yes") {
-                        id++;
-                        employeeQuestions();
-                    }
+                    createTeam();
                 });
         } else {
             inquirer
@@ -108,39 +98,57 @@ function employeeQuestions () {
                         type: "input",
                         name: "github",
                         message: "Engineers github username:"
-                    },
-                    {
-                        type: "list",
-                        name: "more",
-                        message: "Would you like to add another employee?",
-                        choices: [
-                            "yes",
-                            "no"
-                        ]
                     }
                 ]).then((response) => {
-                    employees.push(new Engineer(response.name, id, response.email, response.github));
+                    const newEng = new Engineer(response.name, id, response.email, response.github)
+                    employees.push(newEng);
                     console.log(employees);
-                    if (response.more === "yes") {
-                        id++;
-                        employeeQuestions();
-                    }
+                    createTeam(); 
                 });
         }
     })
+    
 }
 
 managerQuestions();
 
+function createTeam () {
+    inquirer.prompt(
+        {
+        type: "list",
+        name: "more",
+        message: "Would you like to add another employee?",
+        choices: [
+            "yes",
+            "no"
+        ]
+    }).then((response => {
+        switch (response.more) {
+            case "yes" : 
+                id++;
+                employeeQuestions();
+                break;
+            default : writeFile();
+        }
+    }));
+    
+}
+
 // After the user has input all employees desired, call the `render` function (required
 // above) and pass in an array containing all employee objects; the `render` function will
 // generate and return a block of HTML including templated divs for each employee!
+
+// let renderedHtml = render(employees);
 
 // After you have your html, you're now ready to create an HTML file using the HTML
 // returned from the `render` function. Now write it to a file named `team.html` in the
 // `output` folder. You can use the variable `outputPath` above target this location.
 // Hint: you may need to check if the `output` folder exists and create it if it
 // does not.
+
+function writeFile(){
+    fs.writeFileSync(outputPath, render(employees), "utf-8");
+}
 
 // HINT: each employee type (manager, engineer, or intern) has slightly different
 // information; write your code to ask different questions via inquirer depending on
