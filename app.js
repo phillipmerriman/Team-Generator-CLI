@@ -18,6 +18,13 @@ const empType = [
 const employees = [];
 let id = 0;
 
+const validation = (input) => {
+    if (input === "" || input === undefined) {
+        return "Please enter a value."
+    }
+    return true;
+}
+
 // Write code to use inquirer to gather information about the development team members,
 // and to create objects for each team member (using the correct classes as blueprints!)
 
@@ -27,17 +34,20 @@ function managerQuestions () {
             {
                 type: "input",
                 name: "name",
-                message: "Manager name:"
+                message: "Manager name:",
+                validate: validation
             },
             {
                 type: "input",
                 name: "email",
-                message: "Manager email:"
+                message: "Manager email:",
+                validate: validation
             },
             {
                 type: "input",
                 name: "officeNumber",
-                message: "Manager office number:"
+                message: "Manager office number:",
+                validate: validation
             }
         ]).then((response) => {
                 const newMgr = new Manager(response.name, id, response.email, response.officeNumber);
@@ -63,17 +73,20 @@ function employeeQuestions () {
                     {
                         type: "input",
                         name: "name",
-                        message: "Employee name:"
+                        message: "Employee name:",
+                        validate: validation
                     },
                     {
                         type: "input",
                         name: "email",
-                        message: "Interns email address:"
+                        message: "Interns email address:",
+                        validate: validation
                     },
                     {
                         type: "input",
                         name: "school",
-                        message: "Interns school:"
+                        message: "Interns school:",
+                        validate: validation
                     }
                 ]).then((response) => {
                     const newInt = new Intern(response.name, id, response.email, response.school);
@@ -87,17 +100,20 @@ function employeeQuestions () {
                     {
                         type: "input",
                         name: "name",
-                        message: "Employee name:"
+                        message: "Employee name:",
+                        validate: validation
                     },
                     {
                         type: "input",
                         name: "email",
-                        message: "Engineers email address:"
+                        message: "Engineers email address:",
+                        validate: validation
                     },
                     {
                         type: "input",
                         name: "github",
-                        message: "Engineers github username:"
+                        message: "Engineers github username:",
+                        validate: validation
                     }
                 ]).then((response) => {
                     const newEng = new Engineer(response.name, id, response.email, response.github)
@@ -137,8 +153,6 @@ function createTeam () {
 // After the user has input all employees desired, call the `render` function (required
 // above) and pass in an array containing all employee objects; the `render` function will
 // generate and return a block of HTML including templated divs for each employee!
-
-// let renderedHtml = render(employees);
 
 // After you have your html, you're now ready to create an HTML file using the HTML
 // returned from the `render` function. Now write it to a file named `team.html` in the
